@@ -1,0 +1,588 @@
+---
+layout: post
+title:  "安装文件操作旅程!"
+date:   2018-06-12 15:14:54
+categories: jekyll
+tags: jekyll
+excerpt: 当年创建 jekyll 时默认的一篇文章，没什么意义，我也一直没删除，留个纪念吧。
+mathjax: true
+---
+###1.安装jdk
+> 1. curl -O http://download.Oracle.com/otn-pub/java/jdk/7u79-b15/jdk-8u92-linux-x64.tar.gz 
+> 2. tar -zxvf jdk-7u79-linux-x64.tar.gz
+> 3. vi /etc/profile
+> 4. set java environment
+JAVA_HOME=/usr/java/jdk1.7.0_79
+JRE_HOME=/usr/java/jdk1.7.0_79/jre
+CLASS_PATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib
+PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
+export JAVA_HOME JRE_HOME CLASS_PATH PATH
+> 5. source /etc/profile
+> 6. 卸载jdk rpm -e --nodeps java-1.4.2-gcj-compat-1.4.2.0-40jpp.115 
+    
+
+###2. wiki 防火墙开启 
+* /sbin/iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+
+
+###3. SELinux
+  * &emsp;&emsp; .查看SELinux 状态 1. getenforce， 2. sestatus -v  3.  
+  * &emsp;&emsp; 关闭 SELinux    setenforce 0 
+
+###4. 安装nexus
+* 下载tar.gz 包， wget http://download.sonatype.com/nexus/oss/nexus-2.12.0-01-bundle.tar.gz
+* 解压 tar zxvf nexus-2.12.0-01-bundle.tar.gz
+* 移动目录 mv nexus-2.12.0-01/ /usr/program/
+* 修改目录名称 mv nexus-2.12.0-01/ nexus2.12.0/
+* 编辑 vim /etc/profile
+<code># Nexus
+NEXUS_HOME=/usr/program/nexus2.12.0
+export NEXUS_HOME
+RUN_AS_USER=root
+export RUN_AS_USER</code>
+* 刷新配置：source /etc/profile
+* mv /opt/setup/sonatype-work/ /opt/
+* 设置配置文件 vim /usr/program/nexus2.12.0/conf/nexus.properties
+* 修改 nexus-work=${bundleBasedir}/../sonatype-work/nexus  --> nexus-work=/opt/sonatype-work/nexus
+* nexus-work=/opt/sonatype-work/nexus
+* 开防火墙端口 sudo iptables -I INPUT -p tcp -m tcp --dport 8081 -j ACCEPT
+* 保存规则  sudo /etc/rc.d/init.d/iptables save  or sudo service iptables save
+* 重启 sudo service iptables restart 	
+
+测试 
+* 启动 /usr/program/nexus2.12.0/bin/nexus start
+* 查看日志 tail -200f /usr/program/nexus2.12.0/logs/wrapper.log
+* 关闭 /usr/program/nexus2.12.0/bin/nexus stop
+* 访问 http://你的主机IP:8081/nexus
+> 登陆 ： admin 密码: admin123
+* vim /usr/program/nexus2.12.0/conf/nexus.properties，修改该值：application-port=8081
+
+###5 mysql 防火墙设置
+* 检查
+* 是否启动 service 
+* d status
+* 设置权限 
+* netstat -anp
+* 查看端看监听状态 netstat -ntl
+
+   1. 222 服务器安装 yum install iptables-services 
+   2. vim iptables  --> iptbales -A INPUT -m state --state NEW -m tcp -p tcp --dport 2181 -j ACCEPT 
+   3. 重启 systemctl restart iptables.service
+   4. 寻找mysql find / -name mysql 
+   5. 
+
+
+###6 gitlab 安装
+  1. gem sources -a https://ruby.taobao.org/
+  2. yum -y install mariadb*  安装mysql数据库
+  3. cd /etc/yum.repos.d $ wget -O CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-6.repo 
+  4. >$ yum -y install libicu-devel patch gcc-c++ readline-devel zlib-devel libffi-devel openssl-devel make autoconf automake libtool bison libxml2-devel libxslt-devel libyaml-devel zlib-devel openssl-devel cpio expat-devel gettext-devel curl-devel perl-ExtUtils-CBuilder perl-ExtUtils-MakeMaker
+  5. git --version 
+  6. yum remove git
+  7. yum install wget && wget -O git-master.zip https://github.com/git/git/archive/master.zip
+  8. yum -y install unzip && unzip git-master
+  9. cd git-master && make prefix=/usr/local all $ make prefix=/usr/local install
+  10. ln -fs /usr/local/bin/git* /usr/bin/
+  11. 安装ruby 
+     1. mkdir /tmp/ruby && cd /tmp/ruby
+     2. curl --progress ftp://ftp.ruby-lang.org/pub/ruby/ruby-2.1.5.tar.gz | tar xz $ cd ruby-2.1.5
+     3. ./configure --disable-install-rdoc
+     4. make && make install 
+     5. ln -s /usr/local/bin/ruby /usr/bin/ruby
+     6.  ln -s /usr/local/bin/gem /usr/bin/gem
+     7.  ln -s /usr/local/bin/bundle /usr/bin/bundle
+     8.  设置ruby gem 源为淘宝
+     9. gem source -r https://rubygems.org/  //删除
+     10. gem source -a https://ruby.taobao.org/ //添加源
+     11. gem install bundler --no-ri --no-rdoc
+     12. ruby 命令
+       >1.显示当前使用的sources：gem sources 或 gem sources 
+       2.添加淘宝ruby：gem source -a http://ruby.taobao.org/
+       3.添加默认ruby源：gem source -a http://rubygems.org/
+       4.删除淘宝ruby源：gem source -r http://ruby.taobao.org/
+       5.更新缓存：gem sources -u
+  12 安装redis 
+
+  13. 安装gitlab
+    1. cd /home/git 
+    2. sudo -u git -H git clone https://gitlab.com/gitlab-org/gitlab-ce.git -b 7-8-stable gitlab 
+    3. cd /home/git/gitlab 
+    4. sudo -u git -H cp config/gitlab.yml.example config/gitlab.yml
+    5. vim config/gitlab.yml
+      > // bin_path: /usr/local/bin/git
+        // host: localhost
+        // port: 80 
+    6. chown -R git log/ 
+    7. chown -R git tmp/ 
+    8. chmod -R u+rwX  log/ 
+    9. chmod -R u+rwX  tmp/
+    10.  创建必要的文件夹，以及复制配置文件  sudo -u git -H mkdir /home/git/gitlab-satellites 
+    11. sudo -u git -H mkdir tmp/pids/ 
+    12. sudo -u git -H mkdir tmp/sockets/ 
+    13. sudo chmod -R u+rwX  tmp/pids/ 
+    14. sudo chmod -R u+rwX  tmp/sockets/ 
+    15. sudo -u git -H mkdir public/uploads 
+    16. sudo chmod -R u+rwX  public/uploads
+    17. sudo -u git -H cp config/unicorn.rb.example config/unicorn.rb 
+    18. sudo -u git -H cp config/initializers/rack_attack.rb.example  config/initializers/rack_attack.rb
+    19. 数据库链接信息
+      > // 配置数据库连接信息
+       1. sudo -u git cp config/database.yml.mysql config/database.yml 
+       2. sudo -u git -H vim  config/database.yml 
+       3. vim config/database.yml
+         1. production: // username: gitlab
+         2.  password: "gitlab"
+    20. 安装redis 
+        1. cd /usr/local
+        2. wget http://mirrors.ustc.edu.cn/fedora/epel/6/i386/epel-release-6-8.noarch.rpm
+        3. rpm -ivh epel-release-6-8.noarch.rpm
+        4. yum -y install redis 
+        5. chkconfig redis on
+    21. 安装gitLab-Shell
+        1. cd /home/git
+        2.  sudo -u git -H git clone https://gitlab.com/gitlab-org/gitlab-shell.git -b v2.6.0 
+        3.  cd gitlab-shell/
+        4.  sudo -u git -H cp config.yml.example config.yml
+        5.  vim config.yml
+          >  gitlab_url: "http://localhost/" // /usr/bin/redis-cli
+        6. sudo -u git -H ./bin/install
+
+    22. 安装需要ruby的gems
+       1. cd /home/git/gitlab
+       2. sudo -u git -H bundle install --deployment --without development test postgres aws
+       3. sudo -u git -H bundle exec rake gitlab:setup RAILS_ENV=production
+       > login root
+       > password  5iveL!fe
+   
+        4. 错误日志
+        vim /home/git/gitlab/vendor/bundle/ruby/gems/RedCloth-4.2.9/ext/redcloth_scan/gem_make.out
+       > problems 
+           修改 gemfile 源从 ruby.taobao.org 改为 https://rubygems.org/ 
+    > 遇到的问题 ： 
+    > Could not create Makefile due to some reason, probably lack of necessary
+    yum install -y cmake
+
+    23. 安装启动文件以及日志切割文件
+     > cp lib/support/init.d/gitlab /etc/init.d/gitlab
+cp lib/support/init.d/gitlab.default.example /etc/default/gitlab
+cp lib/support/logrotate/gitlab /etc/logrotate.d/gitlab
+    
+    24. 设置git账号信息
+     > sudo -u git -H git config --global user.name "yuzhu.huang"
+     > sudo -u git -H git config --global user.email "hyz123yzh@163.com"
+     > sudo -u git -H git config --global core.autocrlf input
+
+     25. 安装
+     26. 
+        >yum install -y nginx
+        >  清楚公钥 : 7bd9bf62
+
+    
+
+    
+
+
+
+
+
+
+
+
+###7 软件卸载
+  1. 查询所有 rpm -q -a  
+  2. 卸载软件包 rpm -e [package name]  
+
+
+###8 redis 集群安装
+  1. yum install -y gcc-c++
+  2. wget http://download.redis.io/releases/redis-3.2.8.tar.gz
+  3. tar -zxvf redis-3.2.8.tar.gz
+  4. cd redis-3.2.8
+  5. make && make install PREFIX=/usr/local/redis
+  6. 默认启动 1. bin/redis-server 
+  7. 后端启动 
+     1. cp resid.conf /usr/local/redis/bin/
+     2. 修改配置文件 daemonize yes
+     3. 启动 ./redis-server redis.conf
+  8. 集群安装 yum -y install ruby rubygems
+  9. cd redis-3.2.8
+  10. ll *.rb 
+  11. wget redis-.2.8.gem
+  12. gem install redis.3.0.0.gem
+  13. mkdir redis-cluster
+  14. cp -r bin ../redis-cluster/redis01
+ 03 04 05 06
+  15. rm -f dump.rdb (默认开启rdb)
+  16. 修改文件  
+     1. port 7001
+     2. cluster-enable yes 打开前面注释
+  17.  15. cp -r redis01/ redis02 03 04 05 06   
+  18.  cd redis-3.2.8/src 
+  19.  cp *.rb ./redis-clster
+  20.  vim startall.sh
+<pre>
+    cd redis01
+    ./redis-server redis-conf
+    cd ..
+    cd redis02
+    ./redis-server redis-conf
+    cd ..
+    cd redis03
+    ./redis-server redis-conf
+    cd ..
+    cd redis04
+    ./redis-server redis-conf
+    cd ..
+    cd redis05
+    ./redis-server redis-conf
+    cd ..
+    cd redis06
+    ./redis-server redis-conf
+    cd ..
+</pre>
+  21. ./startall.sh
+  22. ./redis-trib.rb create --replicas 1 192.168.111.130:7001 192.168.111.130:7002 192.168.111.130:7003 192.168.111.130:7004 192.168.111.130:7005 192.168.111.130:7006
+  23. redis01 redis-cli -h 192.168.111.130 -p 7002 -C
+  24. yum -y install ruby ruby-devel rubygems rpm-build
+  25. 查看 
+     > redis-cli -p 7001 cluster nodes 
+
+###9. FastDfs 安装
+  1. 上传相关文件  fasfdfs-
+  2. -module_v1.16.tar.gz FastDfs_v5.05.tar.gz  libfastcommonv1.0.7.tar.gz nginx-1.8.0.tar.gz
+  2. yum -y install libevent
+  3. 安装 libfastcommonv1.0.7.tar.gz工具包
+     1. tar -zxvf libfastcommonv1.0.7.tar.gz
+     2. ./make.sh
+     3. ./make.sh install
+        > mkdir -p /usr/include/fastcommon
+install -m 644 common_define.h hash.h chain.h logger.h base64.h shared_func.h pthread_func.h ini_file_reader.h _os_bits.h sockopt.h sched_thread.h http_func.h md5.h local_ip_func.h avl_tree.h ioevent.h ioevent_loop.h fast_task_queue.h fast_timer.h process_ctrl.h fast_mblock.h connection_pool.h /usr/include/fastcommon
+
+     4. cd usr/lib64  -->  lib64common.so  64位安装所需
+  4. 安装tracker
+     1. tar -zxvf FastDfs_v5.05.tar.gz
+     2. cd FastDfs && ./make.sh && ./make.sh install 
+     3. cd /usr/bin &&  ll fdfs_*
+     4. cp /FastDFs/conf /etc/fdfs
+     5.  vim track.conf
+        1. port 22212
+        2. base_path=/home/fastdfs/track
+        3. rm -rf fastdfs/
+        4. mkdir fastdfs && cd fastdfs
+        5. mkdir track
+        6. 启动tracker
+        7. /usr/bin/fdfs_trackerd /etc/fdfs/tracker.conf
+  5. 安装storage
+     1. 配置 etc/fdfs/storage.conf
+     2. tracker_server
+  6. 测试
+     1. 修改配置文件client.conf
+     2. vim client.conf  /usr/bin/fdfs_test /etc/fdfs/client.conf upload anti-steal.jpg
+        base_path=/home/fastdfs/client
+  7. 安装
+  8. nginx 和 fasfdfs-nginx-module_v1.16.tar.gz 
+     1. tar -zxf nginx.tar.gz tar -zxf fasfdfs-nginx-module_v1.16.tar.gz
+     2. /usr/local/fastdfs/fastdfs-
+     3. 
+     4. -module/src  把其中的local 去掉
+     3. mod_fastdfs.conf 复制到/etc/fdfs/下
+     4. vim mod_fastdfs.conf 
+        1. base_path=/tmp
+        2. tracker_server:192.168.199.127:22212
+        3. url_have_group_name = true
+        4. store_path=/home/fastdfs/stroage
+      
+  9. > ./configure \
+--prefix=/usr/local/nginx \
+--pid-path=/var/run/nginx/nginx.pid \
+--lock-path=/var/lock/nginx.lock \
+--error-log-path=/var/log/nginx/error.log \
+--http-log-path=/var/log/nginx/access.log \
+--with-http_gzip_static_module \
+--http-client-body-temp-path=/var/tmp/nginx/client \
+--http-proxy-temp-path=/var/tmp/nginx/proxy \
+--http-fastcgi-temp-path=/var/tmp/nginx/fastcgi \
+--http-uwsgi-temp-path=/var/tmp/nginx/uwsgi \
+--http-scgi-temp-path=/var/tmp/nginx/scgi \
+--add-module=/usr/local/fastdfs/fastdfs-nginx-module/src
+ 10. 创建 批量文件
+    > mkdir -p /var/tmp/nginx/{client,proxy,fastcgi,uwsgi,scgi}
+
+ 11. 查询安装
+    > /usr/local/nginx/sbin/nginx -V
+ 12. 安装时将 fastdfs-nginx-module src/config local 去掉 否则 error : 
+    > fatal error: fdfs_define.h: No such file or directory 
+
+###10. 安装maridab
+   1. yum -y install mariadb* 安装所有依赖的包
+   2. systemctl start mariadb.service
+   3. systemctl enable mariadb.service 
+   4.  mysql 
+   5.  exit 退出
+   6.  mysql_secure_installation 
+   > 安全设置密码
+   > 1. 首次 enter 
+   > 2. 输入密码 一路 y
+   > 密码 ： REDIS
+   7. 创建用户
+   > CREATE USER 'admin'@'%' IDENTIFIED BY 'admin666';
+   > GRANT SELECT,INSERT,UPDATE,DELETE  ON *.* TO 'admin'@'%';
+   8. 启动停止
+   > sudo service mysql start
+   > sudo service mysql stop
+
+
+###11. 清楚缓存
+  1. echo 1 > /proc/sys/vm/drop_caches
+  2.  vmstat 1 -S M  3    查看
+  3.  清理yum 缓存 
+     <pre>
+       1. 清理yum缓存使用yum clean 命令，yum clean 的参数有headers, packages, metadata, dbcache, plugins, expire-cache, rpmdb, all
+       2. yum clean headers #清理/var/cache/yum的headers
+       3. yum clean packages #清理/var/cache/yum下的软件包
+       4. 
+     </pre>
+  4. 释放内存
+     1. 释放网页缓存(To free pagecache)
+     > echo 1 > /proc/sys/vm/drop_caches
+     2. 释放目录项和索引(To free dentries and inodes):
+     > echo 2 > /proc/sys/vm/drop_caches
+     3. 释放网页缓存，目录项和索引（To free pagecache, dentries and inodes）:
+     >  echo 3 > /proc/sys/vm/drop_caches
+     
+
+###12. yum切换
+ 1. 备份 
+mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+
+
+###13. centoe 下 ifconfig not command
+   1. ip addr 
+   2. cd /etc/sysconfig/network-scripts
+   3. vi ifcfg-eth0
+   4. OTBOOT=yes 
+   5. service network restart
+   6. yum provides ifconfig
+   7. yum -y install net-tools
+   8. ifconfig
+   
+  >可能存在的问题
+  >1. 安装时报 cannot not retrieve mirror centos7
+  >解决方案 : vi /etc/sysconfig/network-scripts/ifcfg-eno6666736
+  > 增加 : DNS1=8.8.8.8
+
+
+###14.  安装nginx
+  1. nginx是C语言开发，建议在linux上运行，本教程使用Centos6.5作为安装环境。
+	1. gcc
+	安装nginx需要先将官网下载的源码进行编译，编译依赖gcc环境，如果没有gcc环境，需要安装gcc：yum install gcc-c++ 
+	2. PCRE
+	PCRE(Perl Compatible Regular Expressions)是一个Perl库，包括 perl 兼容的正则表达式库。nginx的http模块使用pcre来解析正则表达式，所以需要在linux上安装pcre库。
+    yum install -y pcre pcre-devel
+    注：pcre-devel是使用pcre开发的一个二次开发库。nginx也需要此库。
+    3. zlib
+	zlib库提供了很多种压缩和解压缩的方式，nginx使用zlib对http包的内容进行gzip，所以需要在linux上安装zlib库。
+    yum install -y zlib zlib-devel
+    4. openssl
+	OpenSSL 是一个强大的安全套接字层密码库，囊括主要的密码算法、常用的密钥和证书封装管理功能及SSL协议，并提供丰富的应用程序供测试或其它目的使用。
+	nginx不仅支持http协议，还支持https（即在ssl协议上传输http），所以需要在linux安装openssl库。
+    yum install -y openssl openssl-devel
+ 
+  2. 安装
+      1. tar -zxvf nginx-1.9.9.tar.gz
+      2. cd nginx.1.8.0 
+      3. 
+      3. <pre> ./configure \
+--prefix=/usr/local/nginx \
+--pid-path=/var/run/nginx/nginx.pid \
+--lock-path=/var/lock/nginx.lock \
+--error-log-path=/var/log/nginx/error.log \
+--http-log-path=/var/log/nginx/access.log \
+--with-http_gzip_static_module \
+--http-client-body-temp-path=/var/tmp/nginx/client \
+--http-proxy-temp-path=/var/tmp/nginx/proxy \
+--http-fastcgi-temp-path=/var/tmp/nginx/fastcgi \
+--http-uwsgi-temp-path=/var/tmp/nginx/uwsgi \
+--http-scgi-temp-path=/var/tmp/nginx/scgi
+
+   4. make && make install 
+   5. 卸载 rm -rf nginx 相关目录
+   
+  3. rpm 安装并且卸载
+   1. rpm -ivh http://nginx-release-centos-6-0.el6.ngx.noarch
+ 安装
+   2. 查找 rpm -qa nginx*
+     > nginx-release-centos-6-0.el6.ngx.noarch
+   3. 卸载 rpm -e nginx-release-centos-6-0.el6.ngx.noarch 
+   4. 安装yum -y install nginx
+   5. 问题 : 
+    > 错误：软件包：nginx-1.10.2-1.el6.x86_64 (epel)           需要：libpcre.so.0()(64bit)
+    > 解决方案 :
+    > vi /etc/yum.repos.d/nginx.repo
+      nginx.repo
+     [nginx]
+     name=nginx repo
+     baseurl=http://nginx.org/packages/centos/7/$basearch/
+     gpgcheck=0
+     enabled=1
+    6. 升级 修改 /etc/yum.repos.d/nginx.repo yum update nginx
+    7. 刷新缓存 yum makecache nginx
+
+
+###15. gitea安装
+   1. gitlab vs gitea
+     > gitlab : https://goo.gl/YP3DF9
+     > gitea : https://goo.gl/GuCuQZ
+
+   2. 安装 
+     1. 方式 docker binary package source 
+     2. binary install 
+        下载 : https://dl.gitea.io/gitea
+     3. https://github.com/appleboy/dotfiles.git
+     4. 当gitea wget -O gitea https://dl.gitea.io/gitea/1.1.2/gitea-1.1.2-linux-amd64
+     5. chmod +x gitea
+     6. ./gitea web
+     7. 创建git用
+        > useradd -m git 
+        > cp gitea /home/git/
+        > su - git
+        > ./gitea web
+        >参考 https://gist.github.com/appleboy/36313a525fbef673f8aefadb9c0f8247
+
+   3. 安装caddy 
+       1.  wget https://github.com/mholt/caddy/releases/download/v0.9.5/caddy_linux_amd64.tar.gz -O caddy.tar.gz
+       2.  mkdir caddy && tar -zxvf caddy.tar.gz -C caddy
+       3. 配置
+         1. cd caddy/
+         2. ld -al 
+         3. mv caddy_linux_amd64 caddy
+         4. vim CaddyFile
+         5. ./caddy
+         6. ./caddy -conf Caddy 
+   4. 安装jenkins
+    > 1. sudo wget -O /etc/yum.repos.d/jenkins.repo http://pkg.jenkins-ci.org/redhat/jenkins.repo
+2. sudo rpm --import https://jenkins-ci.org/redhat/jenkins-ci.org.key
+3. sudo yum install jenkins
+4. 安装过后启动停止方法： sudo service jenkins start/stop/restart
+5. 通过下面配置，使jenkins开机自启动   sudo chkconfig jenkins on
+   5. 安装jdk
+     1. 上传 jdk.rpm 
+     2. rpm -ivh jdk.rpm
+     3. vim /etc/profile
+        > 
+        > _HOME=/usr/java/jdk1.8.0_112
+JRE_HOME=/usr/java/jdk1.8.0_112/jre
+PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
+CLASSPATH=:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib
+export JAVA_HOME JRE_HOME PATH CLASSPATH
+     4. source /etc/profile
+     5. echo $PATH
+
+   6. 安装maven
+     1. wget http://apache-mirror.rbc.ru/pub/apache/maven/maven-3/3.5.0/binaries/apache-maven-3.5.0-bin.tar.gz
+     2. tar -zxvf apache-maven-3.5.0-bin.tar.gz
+     3.  ln -s apache-maven-3.5.0-bin.tar.gz apache-maven
+   
+   7. jenkins 安装
+     1. Install Jenkins Gitea Webhook Plugin.
+
+
+###16. iptables 安装
+  1. yum -y install ipatbels-services
+  2. iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 22122 -j ACCEPT
+  3. service iptables save  --  保存
+  4.  netstat -unltp | grep fdfs
+  5.  
+  6.     --查询端口
+
+
+###17. oracle安装
+   1. 检查swap和/data目录
+      >df -hT
+   2. yum repolist
+   3. 安装 oracle 所需环境
+     > yum -y install binutils compat-libstdc++ compat-libstdc++-33elfutils-libelf-devel gcc gcc-c++ glibc-devel glibc-headers ksh libaio-devellibstdc++-devel make sysstat unixODBC-devel binutils-* compat-libstdc++*elfutils-libelf* glibc* gcc-* libaio* libgcc* libstdc++* make* sysstat*unixODBC* wget unzip
+   4. 安装oracle 所需
+     > pdksh rpm -ivh pdksh-5.2.14-36.el5.i386.rpm
+   5. 解压
+      > unzip linuxamd64_11gR2_database_1of2.zip
+        unzip linuxamd64_11gR2_database_2of2.zip
+   6. 内核参数调整
+     > kernel.shmmni = 4096
+      kernel.sem = 250 32000 100 128
+net.ipv4.ip_local_port_range = 9000 65500
+net.core.rmem_default = 262144
+net.core.rmem_max = 4194304
+net.core.wmem_default = 262144
+net.core.wmem_max = 1048576
+   7. 用户环境要求
+    > 
+     1. 创建相关用户、组账号
+		安装组
+		groupadd oinstall
+		管理组
+		groupadd dba
+		运行用户
+		useradd -g oinstall -G dba oracle
+		设置密码
+		passwd oracle   
+        密码 : qazqaz321
+     2. 调整用户变量
+        vi ~oracle/.bash_profile
+        umask 022
+		export.UTF-8  // 有问题 修正 export LANG=zh_CN.UTF-8
+		export PATH=$PATH:/data/oracle/product/11gr2/dbhome_1/bin
+		export ORACLE_HOME=/data/oracle/product/11gr2/dbhome_1
+		export ORACLE_SID=orcl
+   8. 
+	>./runInstaller -debug -force\ 
+	DECLINE_SECURITY_UPDATES=true\
+	oracle.install.option=INSTALL_DB_SWONLY\
+	UNIX_GROUP_NAME=oinstall\
+	INVENTORY_LOCATION=/data/oracle/oraInventory\
+	ORACLE_HOME=/data/oracle/product/11gr2/dbhome_1\
+	ORACLE_BASE=/data/oracle\
+	oracle.install.db.InstallEdition=EE\
+	oracle.install.db.EEOptionsSelection=true\
+	oracle.install.db.optionalComponents=oracle.rdbms.partitioning:11.2.0.3.0,oracle.oraolap:11.2.0.3.0,oracle.rdbms.dm:11.2.0.3.0,oracle.rdbms.lbac:11.2.0.3.0,oracle.rdbms.rat:11.2.0.3.0\
+	oracle.install.db.DBA_GROUP=dba\
+	oracle.install.db.OPER_GROUP=dba\
+	oracle.install.db.isRACOneInstall=false\
+	DECLINE_SECURITY_UPDATES=true\
+
+   9. 軟鏈接
+    >  ln -s $ORACLE_HOME/bin/sqlplus /usr/bin
+   
+
+###18. 卸载openjdk 
+  ##### 查询
+    >  rpm -qa | grep jdk  
+  
+  ##### 删除
+    >   yum -y remove java-1.8.0-openjdk-devel-1.8.0.65-3.b17.el7.x86_64
+
+###19. 安装ftp(0927)
+1. 安装 VSFTPD yum install vsftpd -y   
+2. 启动 /bin/systemctl start vsftpd.service   
+3. 查看监听  netstat -nltp | grep 21
+4. 目录  /var/ftp
+5. vsftpd 权限 /etc/vsftpd
+   <pre> 1. vsftpd.conf 为主要配置文件
+     ftpusers 配置禁止访问 FTP 服务器的用户列表
+     user_list 配置用户访问控制</pre>
+6. 阻止匿名访问和切换根目录
+  <pre> vim /etc/vsftpd/vsftpd.conf
+   禁用匿名用户
+   anonymous_enable=NO
+   # 禁止切换根目录
+    chroot_local_user=YES</pre>
+7. 重启
+  > /bin/systemctl restart vsftpd.service
+8. 创建ftp 用户
+ <pre>创建用户 useradd ftpuser
+ >添加密码  echo "WvMCyk9e" | passwd ftpuser --stdin</per>
+ 
+9. 限制该用户仅能通过 FTP 访问
+ > usermod -s /sbin/nologin ftpuser
+ 
+ 
