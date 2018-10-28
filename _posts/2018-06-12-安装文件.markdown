@@ -8,18 +8,20 @@ excerpt: 安装各种插件的记录。
 mathjax: true
 ---
 1.安装jdk
-> 1. curl -O http://download.Oracle.com/otn-pub/java/jdk/7u79-b15/jdk-8u92-linux-x64.tar.gz 
-> 2. tar -zxvf jdk-7u79-linux-x64.tar.gz
-> 3. vi /etc/profile
-> 4. set java environment
-JAVA_HOME=/usr/java/jdk1.7.0_79
-JRE_HOME=/usr/java/jdk1.7.0_79/jre
-CLASS_PATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib
-PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
-export JAVA_HOME JRE_HOME CLASS_PATH PATH
-> 5. source /etc/profile 
-> 6. 卸载jdk rpm -e --nodeps java-1.4.2-gcj-compat-1.4.2.0-40jpp.115 
-    
+<pre>
+    > 1. curl -O http://download.Oracle.com/otn-pub/java/jdk/7u79-b15/jdk-8u92-linux-x64.tar.gz 
+    > 2. tar -zxvf jdk-7u79-linux-x64.tar.gz
+    > 3. vi /etc/profile
+    > 4. set java environment
+    JAVA_HOME=/usr/java/jdk1.7.0_79
+    JRE_HOME=/usr/java/jdk1.7.0_79/jre
+    CLASS_PATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib
+    PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
+    export JAVA_HOME JRE_HOME CLASS_PATH PATH
+    > 5. source /etc/profile 
+    > 6. 卸载jdk rpm -e --nodeps java-1.4.2-gcj-compat-1.4.2.0-40jpp.115 
+</pre>
+
 
 ### 2. wiki 防火墙开启 
 * /sbin/iptables -I INPUT -p tcp --dport 80 -j ACCEPT
@@ -151,31 +153,27 @@ export RUN_AS_USER</code>
        1. cd /home/git/gitlab
        2. sudo -u git -H bundle install --deployment --without development test postgres aws
        3. sudo -u git -H bundle exec rake gitlab:setup RAILS_ENV=production
-       > login root
-       > password  5iveL!fe
-   
-        4. 错误日志
+          > login root
+          > password  5iveL!fe
+       4. 错误日志
         vim /home/git/gitlab/vendor/bundle/ruby/gems/RedCloth-4.2.9/ext/redcloth_scan/gem_make.out
-       > problems 
+         > problems 
            修改 gemfile 源从 ruby.taobao.org 改为 https://rubygems.org/ 
-    > 遇到的问题 ： 
-    > Could not create Makefile due to some reason, probably lack of necessary
-    yum install -y cmake
+        > 遇到的问题 ： 
+        > Could not create Makefile due to some reason, probably lack of necessary
+        yum install -y cmake
 
-     23. 安装启动文件以及日志切割文件
-     > cp lib/support/init.d/gitlab /etc/init.d/gitlab
+       23. 安装启动文件以及日志切割文件
+         > cp lib/support/init.d/gitlab /etc/init.d/gitlab
        cp lib/support/init.d/gitlab.default.example /etc/default/gitlab
        cp lib/support/logrotate/gitlab /etc/logrotate.d/gitlab
     
-     24. 设置git账号信息
-     > sudo -u git -H git config --global user.name "yuzhu.huang"
-     > sudo -u git -H git config --global user.email "hyz123yzh@163.com"
-     > sudo -u git -H git config --global core.autocrlf input
-
-     25. 安装
-     26. 
-        >yum install -y nginx
-        >  清楚公钥 : 7bd9bf62
+       24. 设置git账号信息
+         > sudo -u git -H git config --global user.name "yuzhu.huang"
+        > sudo -u git -H git config --global user.email "hyz123yzh@163.com"
+        > sudo -u git -H git config --global core.autocrlf input
+       25. > yum install -y nginx
+          >  清楚公钥 : 7bd9bf62
 
    
 ### 7 软件卸载
