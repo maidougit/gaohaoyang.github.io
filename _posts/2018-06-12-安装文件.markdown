@@ -7,7 +7,7 @@ tags: Linux
 excerpt: 安装各种插件的记录。
 mathjax: true
 ---
-###1.安装jdk
+1.安装jdk
 > 1. curl -O http://download.Oracle.com/otn-pub/java/jdk/7u79-b15/jdk-8u92-linux-x64.tar.gz 
 > 2. tar -zxvf jdk-7u79-linux-x64.tar.gz
 > 3. vi /etc/profile
