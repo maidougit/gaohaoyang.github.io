@@ -17,19 +17,19 @@ JRE_HOME=/usr/java/jdk1.7.0_79/jre
 CLASS_PATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib
 PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
 export JAVA_HOME JRE_HOME CLASS_PATH PATH
-> 5. source /etc/profile
+> 5. source /etc/profile 
 > 6. 卸载jdk rpm -e --nodeps java-1.4.2-gcj-compat-1.4.2.0-40jpp.115 
     
 
-###2. wiki 防火墙开启 
+### 2. wiki 防火墙开启 
 * /sbin/iptables -I INPUT -p tcp --dport 80 -j ACCEPT
 
 
-###3. SELinux
+### 3. SELinux
   * &emsp;&emsp; .查看SELinux 状态 1. getenforce， 2. sestatus -v  3.  
   * &emsp;&emsp; 关闭 SELinux    setenforce 0 
 
-###4. 安装nexus
+### 4. 安装nexus
 * 下载tar.gz 包， wget http://download.sonatype.com/nexus/oss/nexus-2.12.0-01-bundle.tar.gz
 * 解压 tar zxvf nexus-2.12.0-01-bundle.tar.gz
 * 移动目录 mv nexus-2.12.0-01/ /usr/program/
@@ -57,7 +57,7 @@ export RUN_AS_USER</code>
 > 登陆 ： admin 密码: admin123
 * vim /usr/program/nexus2.12.0/conf/nexus.properties，修改该值：application-port=8081
 
-###5 mysql 防火墙设置
+### 5 mysql 防火墙设置
 * 检查
 * 是否启动 service 
 * d status
@@ -72,7 +72,7 @@ export RUN_AS_USER</code>
    5. 
 
 
-###6 gitlab 安装
+### 6 gitlab 安装
   1. gem sources -a https://ruby.taobao.org/
   2. yum -y install mariadb*  安装mysql数据库
   3. cd /etc/yum.repos.d $ wget -O CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-6.repo 
@@ -104,50 +104,50 @@ export RUN_AS_USER</code>
   12 安装redis 
 
   13. 安装gitlab
-    1. cd /home/git 
-    2. sudo -u git -H git clone https://gitlab.com/gitlab-org/gitlab-ce.git -b 7-8-stable gitlab 
-    3. cd /home/git/gitlab 
-    4. sudo -u git -H cp config/gitlab.yml.example config/gitlab.yml
-    5. vim config/gitlab.yml
-      > // bin_path: /usr/local/bin/git
-        // host: localhost
-        // port: 80 
-    6. chown -R git log/ 
-    7. chown -R git tmp/ 
-    8. chmod -R u+rwX  log/ 
-    9. chmod -R u+rwX  tmp/
-    10.  创建必要的文件夹，以及复制配置文件  sudo -u git -H mkdir /home/git/gitlab-satellites 
-    11. sudo -u git -H mkdir tmp/pids/ 
-    12. sudo -u git -H mkdir tmp/sockets/ 
-    13. sudo chmod -R u+rwX  tmp/pids/ 
-    14. sudo chmod -R u+rwX  tmp/sockets/ 
-    15. sudo -u git -H mkdir public/uploads 
-    16. sudo chmod -R u+rwX  public/uploads
-    17. sudo -u git -H cp config/unicorn.rb.example config/unicorn.rb 
-    18. sudo -u git -H cp config/initializers/rack_attack.rb.example  config/initializers/rack_attack.rb
-    19. 数据库链接信息
-      > // 配置数据库连接信息
-       1. sudo -u git cp config/database.yml.mysql config/database.yml 
-       2. sudo -u git -H vim  config/database.yml 
-       3. vim config/database.yml
-         1. production: // username: gitlab
-         2.  password: "gitlab"
-    20. 安装redis 
+      1. cd /home/git 
+      2. sudo -u git -H git clone https://gitlab.com/gitlab-org/gitlab-ce.git -b 7-8-stable gitlab 
+      3. cd /home/git/gitlab 
+      4. sudo -u git -H cp config/gitlab.yml.example config/gitlab.yml
+      5. vim config/gitlab.yml
+          > bin_path: /usr/local/bin/git
+         > host: localhost
+         >  port: 80 
+      6. chown -R git log/ 
+      7. chown -R git tmp/ 
+      8. chmod -R u+rwX  log/ 
+      9. chmod -R u+rwX  tmp/
+      10.  创建必要的文件夹，以及复制配置文件  sudo -u git -H mkdir /home/git/gitlab-satellites 
+      11. sudo -u git -H mkdir tmp/pids/ 
+      12. sudo -u git -H mkdir tmp/sockets/ 
+      13. sudo chmod -R u+rwX  tmp/pids/ 
+      14. sudo chmod -R u+rwX  tmp/sockets/ 
+      15. sudo -u git -H mkdir public/uploads 
+      16. sudo chmod -R u+rwX  public/uploads
+      17. sudo -u git -H cp config/unicorn.rb.example config/unicorn.rb 
+      18. sudo -u git -H cp config/initializers/rack_attack.rb.example  config/initializers/rack_attack.rb
+      19. 数据库链接信息
+           > // 配置数据库连接信息
+           1. sudo -u git cp config/database.yml.mysql config/database.yml 
+           2. sudo -u git -H vim  config/database.yml 
+           3. vim config/database.yml
+             1. production: // username: gitlab
+             2.  password: "gitlab"
+      20. 安装redis 
         1. cd /usr/local
         2. wget http://mirrors.ustc.edu.cn/fedora/epel/6/i386/epel-release-6-8.noarch.rpm
         3. rpm -ivh epel-release-6-8.noarch.rpm
         4. yum -y install redis 
         5. chkconfig redis on
-    21. 安装gitLab-Shell
+      21. 安装gitLab-Shell
         1. cd /home/git
         2.  sudo -u git -H git clone https://gitlab.com/gitlab-org/gitlab-shell.git -b v2.6.0 
-        3.  cd gitlab-shell/
-        4.  sudo -u git -H cp config.yml.example config.yml
-        5.  vim config.yml
-          >  gitlab_url: "http://localhost/" // /usr/bin/redis-cli
+        3. cd gitlab-shell/
+        4. sudo -u git -H cp config.yml.example config.yml
+        5. vim config.yml
+          gitlab_url: "http://localhost/" // /usr/bin/redis-cli
         6. sudo -u git -H ./bin/install
 
-    22. 安装需要ruby的gems
+      22. 安装需要ruby的gems
        1. cd /home/git/gitlab
        2. sudo -u git -H bundle install --deployment --without development test postgres aws
        3. sudo -u git -H bundle exec rake gitlab:setup RAILS_ENV=production
@@ -162,12 +162,12 @@ export RUN_AS_USER</code>
     > Could not create Makefile due to some reason, probably lack of necessary
     yum install -y cmake
 
-    23. 安装启动文件以及日志切割文件
+     23. 安装启动文件以及日志切割文件
      > cp lib/support/init.d/gitlab /etc/init.d/gitlab
-cp lib/support/init.d/gitlab.default.example /etc/default/gitlab
-cp lib/support/logrotate/gitlab /etc/logrotate.d/gitlab
+       cp lib/support/init.d/gitlab.default.example /etc/default/gitlab
+       cp lib/support/logrotate/gitlab /etc/logrotate.d/gitlab
     
-    24. 设置git账号信息
+     24. 设置git账号信息
      > sudo -u git -H git config --global user.name "yuzhu.huang"
      > sudo -u git -H git config --global user.email "hyz123yzh@163.com"
      > sudo -u git -H git config --global core.autocrlf input
@@ -177,23 +177,13 @@ cp lib/support/logrotate/gitlab /etc/logrotate.d/gitlab
         >yum install -y nginx
         >  清楚公钥 : 7bd9bf62
 
-    
-
-    
-
-
-
-
-
-
-
-
-###7 软件卸载
+   
+### 7 软件卸载
   1. 查询所有 rpm -q -a  
   2. 卸载软件包 rpm -e [package name]  
 
 
-###8 redis 集群安装
+### 8 redis 集群安装
   1. yum install -y gcc-c++
   2. wget http://download.redis.io/releases/redis-3.2.8.tar.gz
   3. tar -zxvf redis-3.2.8.tar.gz
@@ -247,7 +237,7 @@ cp lib/support/logrotate/gitlab /etc/logrotate.d/gitlab
   25. 查看 
      > redis-cli -p 7001 cluster nodes 
 
-###9. FastDfs 安装
+### 9. FastDfs 安装
   1. 上传相关文件  fasfdfs-
   2. -module_v1.16.tar.gz FastDfs_v5.05.tar.gz  libfastcommonv1.0.7.tar.gz nginx-1.8.0.tar.gz
   2. yum -y install libevent
@@ -313,7 +303,7 @@ install -m 644 common_define.h hash.h chain.h logger.h base64.h shared_func.h pt
  12. 安装时将 fastdfs-nginx-module src/config local 去掉 否则 error : 
     > fatal error: fdfs_define.h: No such file or directory 
 
-###10. 安装maridab
+### 10. 安装maridab
    1. yum -y install mariadb* 安装所有依赖的包
    2. systemctl start mariadb.service
    3. systemctl enable mariadb.service 
@@ -332,7 +322,7 @@ install -m 644 common_define.h hash.h chain.h logger.h base64.h shared_func.h pt
    > sudo service mysql stop
 
 
-###11. 清楚缓存
+### 11. 清楚缓存
   1. echo 1 > /proc/sys/vm/drop_caches
   2.  vmstat 1 -S M  3    查看
   3.  清理yum 缓存 
@@ -351,12 +341,12 @@ install -m 644 common_define.h hash.h chain.h logger.h base64.h shared_func.h pt
      >  echo 3 > /proc/sys/vm/drop_caches
      
 
-###12. yum切换
+### 12. yum切换
  1. 备份 
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
 
 
-###13. centoe 下 ifconfig not command
+### 13. centoe 下 ifconfig not command
    1. ip addr 
    2. cd /etc/sysconfig/network-scripts
    3. vi ifcfg-eth0
@@ -372,7 +362,7 @@ mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
   > 增加 : DNS1=8.8.8.8
 
 
-###14.  安装nginx
+### 14.  安装nginx
   1. nginx是C语言开发，建议在linux上运行，本教程使用Centos6.5作为安装环境。
 	1. gcc
 	安装nginx需要先将官网下载的源码进行编译，编译依赖gcc环境，如果没有gcc环境，需要安装gcc：yum install gcc-c++ 
@@ -429,7 +419,7 @@ mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
     7. 刷新缓存 yum makecache nginx
 
 
-###15. gitea安装
+### 15. gitea安装
    1. gitlab vs gitea
      > gitlab : https://goo.gl/YP3DF9
      > gitea : https://goo.gl/GuCuQZ
@@ -487,7 +477,7 @@ export JAVA_HOME JRE_HOME PATH CLASSPATH
      1. Install Jenkins Gitea Webhook Plugin.
 
 
-###16. iptables 安装
+### 16. iptables 安装
   1. yum -y install ipatbels-services
   2. iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 22122 -j ACCEPT
   3. service iptables save  --  保存
@@ -496,7 +486,7 @@ export JAVA_HOME JRE_HOME PATH CLASSPATH
   6.     --查询端口
 
 
-###17. oracle安装
+### 17. oracle安装
    1. 检查swap和/data目录
       >df -hT
    2. yum repolist
@@ -554,14 +544,14 @@ net.core.wmem_max = 1048576
     >  ln -s $ORACLE_HOME/bin/sqlplus /usr/bin
    
 
-###18. 卸载openjdk 
+### 18. 卸载openjdk 
   ##### 查询
     >  rpm -qa | grep jdk  
   
   ##### 删除
     >   yum -y remove java-1.8.0-openjdk-devel-1.8.0.65-3.b17.el7.x86_64
 
-###19. 安装ftp(0927)
+### 19. 安装ftp(0927)
 1. 安装 VSFTPD yum install vsftpd -y   
 2. 启动 /bin/systemctl start vsftpd.service   
 3. 查看监听  netstat -nltp | grep 21
