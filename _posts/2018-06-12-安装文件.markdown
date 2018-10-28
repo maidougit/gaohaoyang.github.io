@@ -2,9 +2,9 @@
 layout: post
 title:  "安装文件操作旅程!"
 date:   2018-06-12 15:14:54
-categories: jekyll
-tags: jekyll
-excerpt: 当年创建 jekyll 时默认的一篇文章，没什么意义，我也一直没删除，留个纪念吧。
+categories: Linux
+tags: Linux
+excerpt: 安装各种插件的记录。
 mathjax: true
 ---
 ###1.安装jdk

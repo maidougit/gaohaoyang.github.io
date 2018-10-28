@@ -290,7 +290,7 @@ Configuration file: E:/GitWorkSpace/blog/_config.yml
     gem 'wdm', '>= 0.1.0' if Gem.win_platform?
  Auto-regeneration: enabled for 'E:/GitWorkSpace/blog'
 Configuration file: E:/GitWorkSpace/blog/_config.yml
-    Server address: http://127.0.0.1:4000/
+    Server address: http://127.0.0.1:4000/jekyll/
   Server running... press ctrl-c to stop.
 ```
 
