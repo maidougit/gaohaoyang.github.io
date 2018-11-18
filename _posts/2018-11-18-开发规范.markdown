@@ -2,8 +2,8 @@
 layout: post
 title:  "开发规范"
 date:   2018-11-18 18:24:54
-categories: 设计
-tags: 设计
+categories: app
+tags: app
 excerpt: 开发规范。
 mathjax: true
 ---
