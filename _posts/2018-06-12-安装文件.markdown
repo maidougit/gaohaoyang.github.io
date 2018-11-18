@@ -12,7 +12,6 @@ excerpt: 安装各种插件的记录。
 mathjax: true
 ---
 1.安装jdk
-```
  1. curl -O http://download.Oracle.com/otn-pub/java/jdk/7u79-b15/jdk-8u92-linux-x64.tar.gz 
  2. tar -zxvf jdk-7u79-linux-x64.tar.gz
  3. vi /etc/profile
@@ -24,7 +23,7 @@ mathjax: true
     export JAVA_HOME JRE_HOME CLASS_PATH PATH
  5. source /etc/profile 
  6. 卸载jdk rpm -e --nodeps java-1.4.2-gcj-compat-1.4.2.0-40jpp.115 
-```
+
 
 ### 2. wiki 防火墙开启 
 * /sbin/iptables -I INPUT -p tcp --dport 80 -j ACCEPT
