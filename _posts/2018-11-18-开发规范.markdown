@@ -1,0 +1,28 @@
+---
+layout: post
+title:  "开发规范"
+date:   2018-11-18 18:24:54
+categories: 设计
+tags: 设计
+excerpt: 开发规范。
+mathjax: true
+---
+
+### 1. 论开发规范的重要性
+```text
+  头大，看着头疼，乱，晕......
+```
+
+### 2. 所有的规范会参照阿里巴巴的java设计规范来做驱动设计
+```text
+   1. 编程规约
+   2. 异常日志
+   3. 单元测试
+   4. 安全规约
+   5. 数据库设计规范
+   6. 工程结构
+```
+
+### 3. 参考
+  1. [阿里巴巴java规范](https://github.com/alibaba/p3c)
+  2. [雅虎军规](https://developer.yahoo.com/performance/?guccounter=1)

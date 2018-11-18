@@ -8,7 +8,7 @@ excerpt: 安装各种插件的记录。
 mathjax: true
 ---
 1.安装jdk
-<pre>
+```text
  1. curl -O http://download.Oracle.com/otn-pub/java/jdk/7u79-b15/jdk-8u92-linux-x64.tar.gz 
  2. tar -zxvf jdk-7u79-linux-x64.tar.gz
  3. vi /etc/profile
@@ -20,8 +20,7 @@ mathjax: true
     export JAVA_HOME JRE_HOME CLASS_PATH PATH
  5. source /etc/profile 
  6. 卸载jdk rpm -e --nodeps java-1.4.2-gcj-compat-1.4.2.0-40jpp.115 
-</pre>
-
+```
 
 ### 2. wiki 防火墙开启 
 * /sbin/iptables -I INPUT -p tcp --dport 80 -j ACCEPT
@@ -32,6 +31,7 @@ mathjax: true
   * &emsp;&emsp; 关闭 SELinux    setenforce 0 
 
 ### 4. 安装nexus
+```text
 * 下载tar.gz 包， wget http://download.sonatype.com/nexus/oss/nexus-2.12.0-01-bundle.tar.gz
 * 解压 tar zxvf nexus-2.12.0-01-bundle.tar.gz
 * 移动目录 mv nexus-2.12.0-01/ /usr/program/
@@ -59,7 +59,10 @@ export RUN_AS_USER</code>
 > 登陆 ： admin 密码: admin123
 * vim /usr/program/nexus2.12.0/conf/nexus.properties，修改该值：application-port=8081
 
+```
+
 ### 5 mysql 防火墙设置
+```text
 * 检查
 * 是否启动 service 
 * d status
@@ -71,11 +74,14 @@ export RUN_AS_USER</code>
    2. vim iptables  --> iptbales -A INPUT -m state --state NEW -m tcp -p tcp --dport 2181 -j ACCEPT 
    3. 重启 systemctl restart iptables.service
    4. 寻找mysql find / -name mysql 
-   5. 
+   
+```
+
 
 
 ### 6 gitlab 安装
-  1. gem sources -a https://ruby.taobao.org/
+```text
+ 1. gem sources -a https://ruby.taobao.org/
   2. yum -y install mariadb*  安装mysql数据库
   3. cd /etc/yum.repos.d $ wget -O CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-6.repo 
   4. >$ yum -y install libicu-devel patch gcc-c++ readline-devel zlib-devel libffi-devel openssl-devel make autoconf automake libtool bison libxml2-devel libxslt-devel libyaml-devel zlib-devel openssl-devel cpio expat-devel gettext-devel curl-devel perl-ExtUtils-CBuilder perl-ExtUtils-MakeMaker
@@ -174,14 +180,17 @@ export RUN_AS_USER</code>
         > sudo -u git -H git config --global core.autocrlf input
        25. > yum install -y nginx
           >  清楚公钥 : 7bd9bf62
-
-   
+```   
 ### 7 软件卸载
+```text
   1. 查询所有 rpm -q -a  
   2. 卸载软件包 rpm -e [package name]  
 
+```
+
 
 ### 8 redis 集群安装
+```text
   1. yum install -y gcc-c++
   2. wget http://download.redis.io/releases/redis-3.2.8.tar.gz
   3. tar -zxvf redis-3.2.8.tar.gz
@@ -234,9 +243,11 @@ export RUN_AS_USER</code>
   24. yum -y install ruby ruby-devel rubygems rpm-build
   25. 查看 
      > redis-cli -p 7001 cluster nodes 
+```
 
 ### 9. FastDfs 安装
-  1. 上传相关文件  fasfdfs-
+```text
+ 1. 上传相关文件  fasfdfs-
   2. -module_v1.16.tar.gz FastDfs_v5.05.tar.gz  libfastcommonv1.0.7.tar.gz nginx-1.8.0.tar.gz
   2. yum -y install libevent
   3. 安装 libfastcommonv1.0.7.tar.gz工具包
@@ -300,9 +311,12 @@ install -m 644 common_define.h hash.h chain.h logger.h base64.h shared_func.h pt
     > /usr/local/nginx/sbin/nginx -V
  12. 安装时将 fastdfs-nginx-module src/config local 去掉 否则 error : 
     > fatal error: fdfs_define.h: No such file or directory 
+```
+ 
 
 ### 10. 安装maridab
-   1. yum -y install mariadb* 安装所有依赖的包
+```text
+1. yum -y install mariadb* 安装所有依赖的包
    2. systemctl start mariadb.service
    3. systemctl enable mariadb.service 
    4.  mysql 
@@ -318,10 +332,11 @@ install -m 644 common_define.h hash.h chain.h logger.h base64.h shared_func.h pt
    8. 启动停止
    > sudo service mysql start
    > sudo service mysql stop
-
-
+```
+  
 ### 11. 清楚缓存
-  1. echo 1 > /proc/sys/vm/drop_caches
+```text
+ 1. echo 1 > /proc/sys/vm/drop_caches
   2.  vmstat 1 -S M  3    查看
   3.  清理yum 缓存 
      <pre>
@@ -337,6 +352,8 @@ install -m 644 common_define.h hash.h chain.h logger.h base64.h shared_func.h pt
      > echo 2 > /proc/sys/vm/drop_caches
      3. 释放网页缓存，目录项和索引（To free pagecache, dentries and inodes）:
      >  echo 3 > /proc/sys/vm/drop_caches
+```
+ 
      
 
 ### 12. yum切换
@@ -345,7 +362,8 @@ mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
 
 
 ### 13. centoe 下 ifconfig not command
-   1. ip addr 
+```text
+ 1. ip addr 
    2. cd /etc/sysconfig/network-scripts
    3. vi ifcfg-eth0
    4. OTBOOT=yes 
@@ -358,10 +376,13 @@ mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
   >1. 安装时报 cannot not retrieve mirror centos7
   >解决方案 : vi /etc/sysconfig/network-scripts/ifcfg-eno6666736
   > 增加 : DNS1=8.8.8.8
+```
+  
 
 
 ### 14.  安装nginx
-  1. nginx是C语言开发，建议在linux上运行，本教程使用Centos6.5作为安装环境。
+```text
+1. nginx是C语言开发，建议在linux上运行，本教程使用Centos6.5作为安装环境。
 	1. gcc
 	安装nginx需要先将官网下载的源码进行编译，编译依赖gcc环境，如果没有gcc环境，需要安装gcc：yum install gcc-c++ 
 	2. PCRE
@@ -416,9 +437,12 @@ mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
     6. 升级 修改 /etc/yum.repos.d/nginx.repo yum update nginx
     7. 刷新缓存 yum makecache nginx
 
+```
+  
 
 ### 15. gitea安装
-   1. gitlab vs gitea
+```text
+1. gitlab vs gitea
      > gitlab : https://goo.gl/YP3DF9
      > gitea : https://goo.gl/GuCuQZ
 
@@ -473,9 +497,10 @@ export JAVA_HOME JRE_HOME PATH CLASSPATH
    
    7. jenkins 安装
      1. Install Jenkins Gitea Webhook Plugin.
-
-
+```
+   
 ### 16. iptables 安装
+```text
   1. yum -y install ipatbels-services
   2. iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 22122 -j ACCEPT
   3. service iptables save  --  保存
@@ -483,9 +508,12 @@ export JAVA_HOME JRE_HOME PATH CLASSPATH
   5.  
   6.     --查询端口
 
+```
+
 
 ### 17. oracle安装
-   1. 检查swap和/data目录
+```text
+  1. 检查swap和/data目录
       >df -hT
    2. yum repolist
    3. 安装 oracle 所需环境
@@ -541,6 +569,8 @@ net.core.wmem_max = 1048576
    9. 軟鏈接
     >  ln -s $ORACLE_HOME/bin/sqlplus /usr/bin
    
+```
+ 
 
 ### 18. 卸载openjdk 
   ##### 查询
@@ -550,6 +580,7 @@ net.core.wmem_max = 1048576
     >   yum -y remove java-1.8.0-openjdk-devel-1.8.0.65-3.b17.el7.x86_64
 
 ### 19. 安装ftp(0927)
+```text
 1. 安装 VSFTPD yum install vsftpd -y   
 2. 启动 /bin/systemctl start vsftpd.service   
 3. 查看监听  netstat -nltp | grep 21
@@ -572,5 +603,6 @@ net.core.wmem_max = 1048576
  
 9. 限制该用户仅能通过 FTP 访问
  > usermod -s /sbin/nologin ftpuser
+```
  
  
