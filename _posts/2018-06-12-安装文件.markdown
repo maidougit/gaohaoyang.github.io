@@ -11,6 +11,7 @@ tags: Linux
 excerpt: 安装各种插件的记录。
 mathjax: true
 ---
+
 1.安装jdk
 ``` css
  1. curl -O http://download.Oracle.com/otn-pub/java/jdk/7u79-b15/jdk-8u92-linux-x64.tar.gz 
@@ -52,7 +53,7 @@ export RUN_AS_USER</code>
 * nexus-work=/opt/sonatype-work/nexus
 * 开防火墙端口 sudo iptables -I INPUT -p tcp -m tcp --dport 8081 -j ACCEPT
 * 保存规则  sudo /etc/rc.d/init.d/iptables save  or sudo service iptables save
-* 重启 sudo service iptables restart 	
+* 重启 sudo service iptables restart
 
 测试 
 * 启动 /usr/program/nexus2.12.0/bin/nexus start
