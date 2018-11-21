@@ -1,0 +1,16 @@
+<style>
+  font-size:12px;
+
+</style>
+---
+layout: post
+title:  "安装文件操作旅程!"
+date:   2018-06-12 15:14:54
+categories: Linux
+tags: Linux
+excerpt: 安装各种插件的记录。
+mathjax: true
+---
+1.安装jdk
+
+ 
